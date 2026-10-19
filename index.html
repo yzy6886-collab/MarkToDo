@@ -5,19 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>马克待办</title>
   <style>
+    :root {
+      color-scheme: dark;
+    }
+
     body {
       max-width: 900px;
       margin: 60px auto;
       padding: 0 20px;
-      background: #f7f7f7;
-      color: #222;
+      background: #000;
+      color: #e6e6e6;
     }
 
     .app {
-      background: white;
+      background: #0d0d0d;
       padding: 28px;
+      border: 1px solid #262626;
       border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.7);
     }
 
     h1 {
@@ -31,10 +36,19 @@
       margin-bottom: 24px;
     }
 
-    input[type="text"] {
-      flex: 1;
+    input[type="text"],
+    input[type="date"],
+    button {
       padding: 10px 12px;
       font-size: 16px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: #e6e6e6;
+    }
+
+    input[type="text"] {
+      flex: 1;
     }
 
     button {
@@ -42,9 +56,18 @@
       cursor: pointer;
     }
 
+    button:hover:not(:disabled) {
+      background: #262626;
+    }
+
     button:disabled {
       opacity: 0.5;
       cursor: default;
+    }
+
+    :focus-visible {
+      outline: 2px solid #666;
+      outline-offset: 1px;
     }
 
     ul {
@@ -58,7 +81,7 @@
       align-items: center;
       gap: 10px;
       padding: 12px 0;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid #222;
     }
 
     li span {
@@ -67,26 +90,21 @@
 
     li.completed span {
       text-decoration: line-through;
-      color: #999;
+      color: #8a8a8a;
     }
 
     li.completed .due {
       text-decoration: none;
     }
 
-    input[type="date"] {
-      padding: 10px 12px;
-      font-size: 16px;
-    }
-
     li .due {
       flex: none;
       font-size: 14px;
-      color: #888;
+      color: #a3a3a3;
     }
 
     li .due.overdue {
-      color: #d92c2c;
+      color: #ff6b6b;
     }
   </style>
 </head>
@@ -101,6 +119,7 @@
       <button id="sortButton">排序</button>
       <button id="completeAllButton">全部完成</button>
       <button id="clearCompletedButton">清空已完成</button>
+      <button id="exportButton">导出</button>
     </div>
 
     <ul id="todoList"></ul>
@@ -256,5 +275,8 @@
 
     renderTodos();
   </script>
+
+  <div id="agentation-root"></div>
+  <script type="module" src="/src/toolbar.jsx"></script>
 </body>
 </html>
