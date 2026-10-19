@@ -99,6 +99,8 @@
       <input id="dueInput" type="date">
       <button id="addButton">添加</button>
       <button id="sortButton">排序</button>
+      <button id="completeAllButton">全部完成</button>
+      <button id="clearCompletedButton">清空已完成</button>
     </div>
 
     <ul id="todoList"></ul>
@@ -110,6 +112,8 @@
     const addButton = document.getElementById("addButton");
     const todoList = document.getElementById("todoList");
     const sortButton = document.getElementById("sortButton");
+    const completeAllButton = document.getElementById("completeAllButton");
+    const clearCompletedButton = document.getElementById("clearCompletedButton");
     const stats = document.getElementById("stats");
 
     const dueInput = document.getElementById("dueInput");
@@ -129,6 +133,8 @@
     }
 
     function renderTodos() {
+      completeAllButton.disabled = todos.every(todo => todo.completed);
+      clearCompletedButton.disabled = !todos.some(todo => todo.completed);
       todoList.innerHTML = "";
 
       todos.forEach((todo, index) => {
@@ -203,6 +209,23 @@
       renderTodos();
     }
 
+    function completeAll() {
+      todos.forEach(todo => {
+        todo.completed = true;
+      });
+
+      renderTodos();
+    }
+
+    function clearCompleted() {
+      const remaining = todos.filter(todo => !todo.completed);
+
+      todos.length = 0;
+      todos.push(...remaining);
+
+      renderTodos();
+    }
+
     function addTodo() {
       const text = todoInput.value.trim();
 
@@ -223,6 +246,8 @@
 
     addButton.addEventListener("click", addTodo);
     sortButton.addEventListener("click", sortByDue);
+    completeAllButton.addEventListener("click", completeAll);
+    clearCompletedButton.addEventListener("click", clearCompleted);
     todoInput.addEventListener("keydown", event => {
       if (event.key === "Enter") {
         addTodo();
