@@ -99,9 +99,6 @@
       <input id="dueInput" type="date">
       <button id="addButton">添加</button>
       <button id="sortButton">排序</button>
-      <button id="completeAllButton">全部完成</button>
-      <button id="clearCompletedButton">清空已完成</button>
-      <button id="exportButton">导出</button>
     </div>
 
     <ul id="todoList"></ul>
@@ -116,9 +113,6 @@
     const stats = document.getElementById("stats");
 
     const dueInput = document.getElementById("dueInput");
-    const completeAllButton = document.getElementById("completeAllButton");
-    const clearCompletedButton = document.getElementById("clearCompletedButton");
-    const exportButton = document.getElementById("exportButton");
 
     const todos = [
       { text: "关注「马克的技术工作坊」", completed: false },
@@ -134,35 +128,7 @@
       return todo.due < today;
     }
 
-    function clearCompleted() {
-      const remaining = todos.filter(todo => !todo.completed);
-
-      todos.length = 0;
-      todos.push(...remaining);
-
-      renderTodos();
-    }
-
-    function exportTodos() {
-      const lines = todos.map(todo => todo.text);
-
-      const blob = new Blob([lines.join("\n")], { type: "text/plain" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "马克待办.txt";
-      link.click();
-    }
-
-    function completeAll() {
-      todos.forEach(todo => {
-        todo.completed = true;
-      });
-
-      renderTodos();
-    }
-
     function renderTodos() {
-      completeAllButton.disabled = todos.every(todo => todo.completed);
       todoList.innerHTML = "";
 
       todos.forEach((todo, index) => {
@@ -216,6 +182,10 @@
 
     function sortByDue() {
       todos.sort((a, b) => {
+        if (!a.due && !b.due) {
+          return 0;
+        }
+
         if (!a.due) {
           return 1;
         }
@@ -224,7 +194,7 @@
           return -1;
         }
 
-        return (a.due < b.due) === sortAsc ? -1 : 1;
+        return sortAsc ? a.due.localeCompare(b.due) : b.due.localeCompare(a.due);
       });
 
       sortButton.textContent = sortAsc ? "排序 ↑" : "排序 ↓";
@@ -253,10 +223,6 @@
 
     addButton.addEventListener("click", addTodo);
     sortButton.addEventListener("click", sortByDue);
-
-    completeAllButton.addEventListener("click", completeAll);
-    clearCompletedButton.addEventListener("click", clearCompleted);
-    exportButton.addEventListener("click", exportTodos);
     todoInput.addEventListener("keydown", event => {
       if (event.key === "Enter") {
         addTodo();
